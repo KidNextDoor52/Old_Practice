@@ -23,7 +23,7 @@ import os
 import pandas as pd
 
 
-script_dir = os.path.abspath("C:\\Users\\mccra\\OneDrive\\Documents\\GitHub\\Old_Practice\\day 25")
+script_dir = os.path.abspath("C:\\Users\\mccra\\OneDrive\\Documents\\GitHub\\Old_Practice\\day-25")
 file = os.path.join(script_dir, "weather_data.csv")
 
 #data = pd.read_csv(file)
@@ -64,4 +64,4 @@ data_dict = {
 data = pd.DataFrame(data_dict)
 print(data)
 
-data.to_csv("day 25/new_data.csv")
+data.to_csv("day-25/new_data.csv")

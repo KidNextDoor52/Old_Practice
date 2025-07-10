@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-file_path = os.path.abspath("C:\\Users\\mccra\\OneDrive\\Documents\\GitHub\\Old_Practice\\day 25")
+file_path = os.path.abspath("C:\\Users\\mccra\\OneDrive\\Documents\\GitHub\\Old_Practice\\day-25")
 file = os.path.join(file_path, "2018_Central_Park_Squirrel_Census_-_Squirrel_Data.csv")
 
 data = pd.read_csv(file)
@@ -22,4 +22,4 @@ squirrel_dict = {
 }
 
 df = pd.DataFrame(squirrel_dict)
-df.to_csv("day 25/squirrel_count.csv")
+df.to_csv("day-25/squirrel_count.csv")

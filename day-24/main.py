@@ -17,7 +17,7 @@ import os
 
 
 
-with open(r"\Users\mccra\OneDrive\Documents\GitHub\Old_Practice\day 24\my_file.txt", mode="a") as file:
+with open(r"\Users\mccra\OneDrive\Documents\GitHub\Old_Practice\day-24\my_file.txt", mode="a") as file:
     file.write("\nLEts keep going")
 
 """
