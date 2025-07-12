@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
-import pyperclip 
+import pyperclip
+import json 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -24,20 +25,57 @@ def save():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+
+    }
 
     if len(website) == 0 or len(password) == 0:
          messagebox.showinfo(title="Oops" , message="Please make sure you haven't left any fields empty. ")
     else:
+        try:  #TRY BLOCK CAN FAIL
+            with open("data.json", "r") as data_file:
+                #reading old data
+                data = json.load(data_file)
+        except FileNotFoundError:  #DEALS WITH ANY FAILURES THAT OCCUR
+            with open("data.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:   #HAS THE CODE THAT NEEDS TO RUN IF NO ISSUES
+            #updating old data (dictionary) with the new data 
+            # NEW DATA IS A DICTIONARY     DATA FILE IS THE FILE OPENED IN JSON FORM
+            data.update(new_data)
+            
+            with open("data.json", "w") as data_file:
+                #saving the updated data
+                json.dump(data, data_file, indent=40)
 
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} "
-                               f"\nPassword: {password} \nIs it ok to save? ")
+        finally: #DOESN'T MATTER IF THERE WAS OR WASN'T AN ISSUE WILL RUN
+            #CLEARS OUR WEBSITE PASSWORDS AND ENTRY
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
 
-        if is_ok:   
-            with open("day-29/data.txt", "a") as data_file:
-                  data_file.write(f"{website} | {email} | {password}\n")
-                  website_entry.delete(0, END)
-                  password_entry.delete(0, END)
+#----------------------------Find Password---------------------------------
                 
+def find_password():
+    website = website_entry.get()
+    try:#if the file isn't found
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:#what to do if the data is not found | Exceptions should be used when there isn't an easy if/else
+            messagebox.showinfo(title="Erro" , message="No Data File Found. ")
+    else: #if it was successful finding the file
+        if website in data:
+            #data is the whole dictionary, email and password are nested dictionaries
+            email = data[website]["email"] #using the key "email" to access the value
+            password = data[website]["password"] # using the key "password" to access the value
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        else:#this shows the error if there is something not found that we search
+            messagebox.showinfo(title="Error", message=f"No details for {website} exists .")
+
+
 
           
 # ---------------------------- UI SETUP ------------------------------- #
@@ -70,8 +108,8 @@ password_label = Label(text="password")
 password_label.grid(row=3, column=0)
 
 #Entries
-website_entry = Entry(width=35)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=21)
+website_entry.grid(row=1, column=1, columnspan=1)
 website_entry.focus()
 email_entry = Entry(width=35)
 email_entry.grid(row=2, column=1, columnspan=2)
@@ -80,9 +118,12 @@ password_entry = Entry(width=21)
 password_entry.grid(row=3, column=1)
 
 #Buttons
+search_button = Button(text="Search", width=16, command=find_password)
+search_button.grid(row=1, column=2)
 generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(row=3, column=2)
 add_button = Button(text="Add", width=36, command=save)
 add_button.grid(row=4, column=1, columnspan=2)
+
 
 window.mainloop()
